@@ -22,7 +22,12 @@ const TOOL_DESCRIPTION =
   'Clone a repository from a remote URL to a local path. Supports HTTP/HTTPS and SSH URLs, with optional shallow cloning.';
 
 const InputSchema = z.object({
-  url: z.string().url().describe('Remote repository URL to clone from.'),
+  url: z
+    .string()
+    .min(1)
+    .describe(
+      'Remote repository URL to clone from. Supports HTTPS (https://github.com/user/repo.git) and SSH (git@github.com:user/repo.git) formats.',
+    ),
   localPath: z
     .string()
     .min(1)
