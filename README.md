@@ -181,6 +181,7 @@ All configuration is centralized and validated at startup in `src/config/index.t
 | `STORAGE_PROVIDER_TYPE`        | Storage backend: `in-memory`, `filesystem`, `supabase`, `cloudflare-kv`, `r2`.                                                                            | `in-memory` |
 | `OTEL_ENABLED`                 | Set to `true` to enable OpenTelemetry.                                                                                                                    | `false`     |
 | `MCP_LOG_LEVEL`                | The minimum level for logging (`debug`, `info`, `warn`, `error`).                                                                                         | `info`      |
+| `GIT_BINARY`                   | Path to git binary. Supports absolute paths (e.g., `/opt/homebrew/bin/git`) and tilde expansion. Falls back to `git` from PATH if not set.                | `git`       |
 | `GIT_SIGN_COMMITS`             | Set to `"true"` to enable GPG/SSH signing for all commits, merges, rebases, cherry-picks, and tags. Requires GPG/SSH configuration.                       | `false`     |
 | `GIT_AUTHOR_NAME`              | Git author name. Aliases: `GIT_USERNAME`, `GIT_USER`. Falls back to global git config if not set.                                                         | `(none)`    |
 | `GIT_AUTHOR_EMAIL`             | Git author email. Aliases: `GIT_EMAIL`, `GIT_USER_EMAIL`. Falls back to global git config if not set.                                                     | `(none)`    |

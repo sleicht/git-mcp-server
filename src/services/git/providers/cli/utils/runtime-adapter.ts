@@ -107,6 +107,39 @@ export function detectRuntime(): 'bun' | 'node' {
 }
 
 /**
+ * Resolves the git binary path from configuration.
+ *
+ * This function dynamically resolves the git binary path from the application
+ * configuration using dependency injection. It supports custom git binary paths
+ * configured via the GIT_BINARY environment variable.
+ *
+ * @returns The git binary path from config.git.binaryPath, or 'git' as fallback
+ *
+ * @example
+ * ```typescript
+ * const binary = getGitBinary();
+ * // Returns '/opt/homebrew/bin/git' if GIT_BINARY is set
+ * // Returns 'git' if GIT_BINARY is not set (uses PATH)
+ * ```
+ */
+function getGitBinary(): string {
+  try {
+    // Dynamic import to avoid circular dependencies
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-assignment
+    const { container } = require('tsyringe');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-assignment
+    const { AppConfig } = require('@/container/tokens.js');
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const config = container.resolve(AppConfig);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+    return config.git.binaryPath || 'git';
+  } catch {
+    // Fallback to 'git' if config is not available (e.g., during tests)
+    return 'git';
+  }
+}
+
+/**
  * Spawns a git command using Bun.spawn for optimal performance.
  *
  * This function is used when running in native Bun runtime. It uses Bun's
@@ -144,8 +177,11 @@ async function spawnWithBun(
     );
   }
 
+  // Resolve git binary path from config (defaults to 'git')
+  const gitBinary = getGitBinary();
+
   // Spawn the process using typed interface - no more eslint-disable needed
-  const proc = bunApi.spawn(['git', ...args], {
+  const proc = bunApi.spawn([gitBinary, ...args], {
     cwd,
     env,
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -232,7 +268,10 @@ async function spawnWithNode(
       return;
     }
 
-    const proc = spawn('git', args, {
+    // Resolve git binary path from config (defaults to 'git')
+    const gitBinary = getGitBinary();
+
+    const proc = spawn(gitBinary, args, {
       cwd,
       env,
       stdio: ['ignore', 'pipe', 'pipe'],

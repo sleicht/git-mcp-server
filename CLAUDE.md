@@ -1054,6 +1054,7 @@ Use scripts from `package.json`:
   - **Auth:** `MCP_AUTH_MODE` (`'none'`|`'jwt'`|`'oauth'`), `MCP_AUTH_SECRET_KEY` (jwt), `OAUTH_*` (oauth)
   - **Storage:** `STORAGE_PROVIDER_TYPE` (`'in-memory'`|`'filesystem'`|`'supabase'`|`'cloudflare-r2'`|`'cloudflare-kv'`)
   - **Git-Specific:**
+    - `GIT_BINARY` - Path to git binary (defaults to `'git'`). Supports absolute paths (e.g., `/opt/homebrew/bin/git`) and tilde expansion
     - `GIT_SIGN_COMMITS` (`'true'`|`'false'`) - Enable GPG/SSH commit signing
     - `GIT_WRAPUP_INSTRUCTIONS_PATH` - Path to custom workflow instructions markdown file
   - **Telemetry:** `OTEL_ENABLED`, `OTEL_SERVICE_NAME`, `OTEL_SERVICE_VERSION`, `OTEL_EXPORTER_OTLP_*`

@@ -234,6 +234,10 @@ const ConfigSchema = z.object({
       emptyStringAsUndefined,
       z.enum(['auto', 'cli', 'isomorphic']).default('auto'),
     ),
+    binaryPath: z.preprocess(
+      (val) => expandTildePath(emptyStringAsUndefined(val)),
+      z.string().optional(),
+    ), // Custom git binary path (defaults to 'git'). Supports tilde expansion.
     signCommits: z.coerce.boolean().default(false),
     authorName: z.string().optional(),
     authorEmail: z.string().email().optional(),
@@ -382,6 +386,7 @@ const parseConfig = () => {
     },
     git: {
       provider: env.GIT_PROVIDER,
+      binaryPath: env.GIT_BINARY,
       signCommits: env.GIT_SIGN_COMMITS,
       // Support multiple naming conventions for author/committer
       // Priority: GIT_AUTHOR_NAME > GIT_USERNAME > GIT_USER
