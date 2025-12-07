@@ -45,20 +45,39 @@ export async function executeCommit(
       args.push('--no-verify');
     }
 
-    // Add signing support - use explicit option or fall back to config default
-    const shouldSign = options.sign ?? shouldSignCommits();
-
-    if (shouldSign) {
-      args.push('--gpg-sign');
-    }
-
     if (options.author) {
       const authorStr = `${options.author.name} <${options.author.email}>`;
       args.push(`--author=${authorStr}`);
     }
 
-    const cmd = buildGitCommand({ command: 'commit', args });
-    await execGit(cmd, context.workingDirectory, context.requestContext);
+    // Add signing support - use explicit option or fall back to config default
+    const shouldSign = options.sign ?? shouldSignCommits();
+
+    // Try with signing first (if enabled)
+    let commitError: unknown = null;
+    if (shouldSign) {
+      try {
+        const signedArgs = [...args, '--gpg-sign'];
+        const cmd = buildGitCommand({ command: 'commit', args: signedArgs });
+        await execGit(cmd, context.workingDirectory, context.requestContext);
+        // Success with signing - continue to get commit details
+      } catch (error) {
+        // If signing fails and forceUnsignedOnFailure is true, retry without signing
+        if (options.forceUnsignedOnFailure) {
+          commitError = error; // Store error to retry
+        } else {
+          throw error; // Fail immediately if forceUnsignedOnFailure is false/undefined
+        }
+      }
+    }
+
+    // If we haven't committed yet (either no signing or signing failed with forceUnsignedOnFailure)
+    if (commitError !== null || !shouldSign) {
+      // Explicitly disable signing with --no-gpg-sign
+      const unsignedArgs = [...args, '--no-gpg-sign'];
+      const cmd = buildGitCommand({ command: 'commit', args: unsignedArgs });
+      await execGit(cmd, context.workingDirectory, context.requestContext);
+    }
 
     // Get commit hash reliably
     const hashCmd = buildGitCommand({
