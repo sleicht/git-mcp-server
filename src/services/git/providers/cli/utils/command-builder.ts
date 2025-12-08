@@ -178,6 +178,7 @@ const SAFE_GIT_OPTIONS = new Set([
   '--cached',
   '--staged',
   '--unified',
+  '--name-only',
   // Misc flags
   '--bare',
   '--tags',

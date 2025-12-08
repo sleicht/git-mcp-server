@@ -50,12 +50,12 @@ export async function executeDiff(
     }
 
     // Add commit refs
-    if (options.commit1) {
-      args.push(options.commit1);
+    if (options.source) {
+      args.push(options.source);
     }
 
-    if (options.commit2) {
-      args.push(options.commit2);
+    if (options.target) {
+      args.push(options.target);
     }
 
     // Add path filter last (after --)
