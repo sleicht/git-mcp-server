@@ -1,6 +1,6 @@
 # git-mcp-server - Directory Structure
 
-Generated on: 2025-12-17 08:20:23
+Generated on: 2025-12-17 08:21:28
 
 ```
 git-mcp-server
@@ -15,6 +15,9 @@ git-mcp-server
 ├── .husky
 ├── .idea
 ├── docs
+│   ├── git-service-architecture.md
+│   ├── response-formatting.md
+│   ├── tool-development-guide.md
 │   └── tree.md
 ├── scripts
 │   ├── clean.ts
