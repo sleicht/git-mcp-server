@@ -6,9 +6,12 @@
  * For git command execution validators, see src/services/git/providers/cli/utils/git-validators.ts
  */
 
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+
 import type { StorageService } from '@/storage/core/StorageService.js';
 import { JsonRpcErrorCode, McpError } from '@/types-global/errors.js';
-import { logger, type RequestContext, sanitization } from '@/utils/index.js';
+import { logger, type RequestContext } from '@/utils/index.js';
 
 /**
  * Resolve working directory from session storage or direct path input.
@@ -95,32 +98,81 @@ export async function resolveWorkingDirectory(
   // Sanitize path for security (prevent directory traversal)
   // If GIT_BASE_DIR is configured, restrict operations to that directory tree
   const { config } = await import('@/config/index.js');
-  const sanitizeOptions: {
-    allowAbsolute: boolean;
-    rootDir?: string;
-  } = {
-    allowAbsolute: true,
-  };
+  const baseDir = config?.git?.baseDir;
 
-  // Only set rootDir if config exists and GIT_BASE_DIR is configured
-  // (config may be undefined in test environments)
-  if (config?.git?.baseDir) {
-    sanitizeOptions.rootDir = config.git.baseDir;
+  // First, resolve to absolute path
+  let resolvedPath: string;
+  if (path.isAbsolute(workingDir)) {
+    resolvedPath = path.normalize(workingDir);
+  } else {
+    // Relative paths are resolved against baseDir if set, otherwise cwd
+    resolvedPath = baseDir 
+      ? path.resolve(baseDir, workingDir)
+      : path.resolve(workingDir);
   }
 
-  const { sanitizedPath } = sanitization.sanitizePath(
-    workingDir,
-    sanitizeOptions,
-  );
+  // Security check: if baseDir is configured, ensure path is within it
+  if (baseDir) {
+    const normalizedBase = path.normalize(baseDir);
+    if (!resolvedPath.startsWith(normalizedBase + path.sep) && resolvedPath !== normalizedBase) {
+      throw new McpError(
+        JsonRpcErrorCode.ValidationError,
+        `Path '${workingDir}' is outside the allowed base directory '${baseDir}'`,
+        { path: workingDir, baseDir },
+      );
+    }
+  }
+
+  // Additional security: check for null bytes
+  if (resolvedPath.includes('\0')) {
+    throw new McpError(
+      JsonRpcErrorCode.ValidationError,
+      'Path contains null bytes, which is disallowed',
+      { path: workingDir },
+    );
+  }
 
   logger.debug('Sanitized working directory path', {
     ...appContext,
     original: workingDir,
-    sanitized: sanitizedPath,
-    baseDir: config?.git?.baseDir,
+    resolved: resolvedPath,
+    baseDir,
+  });
+  
+  try {
+    const stats = fs.statSync(resolvedPath);
+    if (!stats.isDirectory()) {
+      throw new McpError(
+        JsonRpcErrorCode.ValidationError,
+        `Path exists but is not a directory: ${resolvedPath}`,
+        { path: resolvedPath },
+      );
+    }
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      throw new McpError(
+        JsonRpcErrorCode.ValidationError,
+        `Working directory does not exist: ${resolvedPath}`,
+        { path: resolvedPath },
+      );
+    }
+    // Re-throw McpError as-is, wrap other errors
+    if (error instanceof McpError) {
+      throw error;
+    }
+    throw new McpError(
+      JsonRpcErrorCode.InternalError,
+      `Failed to access working directory: ${(error as Error).message}`,
+      { path: resolvedPath },
+    );
+  }
+
+  logger.debug('Working directory verified to exist', {
+    ...appContext,
+    resolvedPath,
   });
 
-  return sanitizedPath;
+  return resolvedPath;
 }
 
 /**

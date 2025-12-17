@@ -3,6 +3,8 @@
  * @module services/git/providers/cli/operations/core/clone
  */
 
+import * as path from 'node:path';
+
 import type { RequestContext } from '@/utils/index.js';
 
 import type {
@@ -25,7 +27,14 @@ export async function executeClone(
   ) => Promise<{ stdout: string; stderr: string }>,
 ): Promise<GitCloneResult> {
   try {
-    const args: string[] = [options.remoteUrl, options.localPath];
+    // Resolve localPath to absolute and get parent directory
+    // Clone must run from parent dir since target doesn't exist yet
+    // See: https://github.com/cyanheads/git-mcp-server/pull/33
+    const absoluteLocalPath = path.resolve(options.localPath);
+    const parentDir = path.dirname(absoluteLocalPath);
+    const targetDirName = path.basename(absoluteLocalPath);
+
+    const args: string[] = [options.remoteUrl, targetDirName];
 
     if (options.branch) {
       args.push('--branch', options.branch);
@@ -48,11 +57,12 @@ export async function executeClone(
     }
 
     const cmd = buildGitCommand({ command: 'clone', args });
-    await execGit(cmd, context.workingDirectory, context.requestContext);
+    // Run from parent directory, clone into target directory name
+    await execGit(cmd, parentDir, context.requestContext);
 
     const result = {
       success: true,
-      localPath: options.localPath,
+      localPath: absoluteLocalPath,
       remoteUrl: options.remoteUrl,
       branch: options.branch || 'main',
     };

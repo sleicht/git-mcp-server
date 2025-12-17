@@ -1,6 +1,6 @@
 # git-mcp-server - Directory Structure
 
-Generated on: 2025-12-17 08:21:28
+Generated on: 2025-12-17 08:24:25
 
 ```
 git-mcp-server
@@ -10,6 +10,7 @@ git-mcp-server
 │   ├── codeql
 │   │   └── codeql-config.yml
 │   ├── workflows
+│   │   ├── docker-publish.yml
 │   │   └── publish.yml
 │   └── FUNDING.yml
 ├── .husky
@@ -354,6 +355,7 @@ git-mcp-server
 ├── bunfig.toml
 ├── CHANGELOG.md
 ├── CLAUDE.md
+├── Dockerfile
 ├── eslint.config.js
 ├── LICENSE
 ├── package.json
