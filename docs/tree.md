@@ -1,6 +1,6 @@
 # git-mcp-server - Directory Structure
 
-Generated on: 2025-10-15 15:14:11
+Generated on: 2025-12-17 08:20:23
 
 ```
 git-mcp-server
@@ -13,7 +13,7 @@ git-mcp-server
 │   │   └── publish.yml
 │   └── FUNDING.yml
 ├── .husky
-├── coverage
+├── .idea
 ├── docs
 │   └── tree.md
 ├── scripts
@@ -124,56 +124,53 @@ git-mcp-server
 │   │   │   │   ├── GitProviderFactory.ts
 │   │   │   │   └── IGitProvider.ts
 │   │   │   ├── providers
-│   │   │   │   ├── cli
-│   │   │   │   │   ├── operations
-│   │   │   │   │   │   ├── branches
-│   │   │   │   │   │   │   ├── branch.ts
-│   │   │   │   │   │   │   ├── checkout.ts
-│   │   │   │   │   │   │   ├── cherry-pick.ts
-│   │   │   │   │   │   │   ├── merge.ts
-│   │   │   │   │   │   │   └── rebase.ts
-│   │   │   │   │   │   ├── commits
-│   │   │   │   │   │   │   ├── commit.ts
-│   │   │   │   │   │   │   ├── diff.ts
-│   │   │   │   │   │   │   ├── log.ts
-│   │   │   │   │   │   │   └── show.ts
-│   │   │   │   │   │   ├── core
-│   │   │   │   │   │   │   ├── clean.ts
-│   │   │   │   │   │   │   ├── clone.ts
-│   │   │   │   │   │   │   ├── init.ts
-│   │   │   │   │   │   │   └── status.ts
-│   │   │   │   │   │   ├── history
-│   │   │   │   │   │   │   ├── blame.ts
-│   │   │   │   │   │   │   └── reflog.ts
-│   │   │   │   │   │   ├── remotes
-│   │   │   │   │   │   │   ├── fetch.ts
-│   │   │   │   │   │   │   ├── pull.ts
-│   │   │   │   │   │   │   ├── push.ts
-│   │   │   │   │   │   │   └── remote.ts
-│   │   │   │   │   │   ├── staging
-│   │   │   │   │   │   │   ├── add.ts
-│   │   │   │   │   │   │   └── reset.ts
-│   │   │   │   │   │   ├── stash
-│   │   │   │   │   │   │   └── stash.ts
-│   │   │   │   │   │   ├── tags
-│   │   │   │   │   │   │   └── tag.ts
-│   │   │   │   │   │   ├── worktree
-│   │   │   │   │   │   │   └── worktree.ts
-│   │   │   │   │   │   └── index.ts
-│   │   │   │   │   ├── utils
-│   │   │   │   │   │   ├── command-builder.ts
-│   │   │   │   │   │   ├── config-helper.ts
-│   │   │   │   │   │   ├── error-mapper.ts
-│   │   │   │   │   │   ├── git-executor.ts
-│   │   │   │   │   │   ├── git-validators.ts
-│   │   │   │   │   │   ├── index.ts
-│   │   │   │   │   │   ├── output-parser.ts
-│   │   │   │   │   │   └── runtime-adapter.ts
-│   │   │   │   │   ├── CliGitProvider.ts
-│   │   │   │   │   └── index.ts
-│   │   │   │   └── isomorphic
+│   │   │   │   └── cli
 │   │   │   │       ├── operations
-│   │   │   │       └── utils
+│   │   │   │       │   ├── branches
+│   │   │   │       │   │   ├── branch.ts
+│   │   │   │       │   │   ├── checkout.ts
+│   │   │   │       │   │   ├── cherry-pick.ts
+│   │   │   │       │   │   ├── merge.ts
+│   │   │   │       │   │   └── rebase.ts
+│   │   │   │       │   ├── commits
+│   │   │   │       │   │   ├── commit.ts
+│   │   │   │       │   │   ├── diff.ts
+│   │   │   │       │   │   ├── log.ts
+│   │   │   │       │   │   └── show.ts
+│   │   │   │       │   ├── core
+│   │   │   │       │   │   ├── clean.ts
+│   │   │   │       │   │   ├── clone.ts
+│   │   │   │       │   │   ├── init.ts
+│   │   │   │       │   │   └── status.ts
+│   │   │   │       │   ├── history
+│   │   │   │       │   │   ├── blame.ts
+│   │   │   │       │   │   └── reflog.ts
+│   │   │   │       │   ├── remotes
+│   │   │   │       │   │   ├── fetch.ts
+│   │   │   │       │   │   ├── pull.ts
+│   │   │   │       │   │   ├── push.ts
+│   │   │   │       │   │   └── remote.ts
+│   │   │   │       │   ├── staging
+│   │   │   │       │   │   ├── add.ts
+│   │   │   │       │   │   └── reset.ts
+│   │   │   │       │   ├── stash
+│   │   │   │       │   │   └── stash.ts
+│   │   │   │       │   ├── tags
+│   │   │   │       │   │   └── tag.ts
+│   │   │   │       │   ├── worktree
+│   │   │   │       │   │   └── worktree.ts
+│   │   │   │       │   └── index.ts
+│   │   │   │       ├── utils
+│   │   │   │       │   ├── command-builder.ts
+│   │   │   │       │   ├── config-helper.ts
+│   │   │   │       │   ├── error-mapper.ts
+│   │   │   │       │   ├── git-executor.ts
+│   │   │   │       │   ├── git-validators.ts
+│   │   │   │       │   ├── index.ts
+│   │   │   │       │   ├── output-parser.ts
+│   │   │   │       │   └── runtime-adapter.ts
+│   │   │   │       ├── CliGitProvider.ts
+│   │   │   │       └── index.ts
 │   │   │   ├── index.ts
 │   │   │   └── types.ts
 │   │   ├── llm
@@ -265,8 +262,6 @@ git-mcp-server
 │   │   ├── index.int.test.ts
 │   │   └── index.test.ts
 │   ├── mcp-server
-│   │   ├── resources
-│   │   │   └── definitions
 │   │   ├── tools
 │   │   │   ├── definitions
 │   │   │   │   ├── helpers
@@ -275,7 +270,6 @@ git-mcp-server
 │   │   │   │   │   ├── mockGitProvider.ts
 │   │   │   │   │   ├── mockStorageService.ts
 │   │   │   │   │   └── testContext.ts
-│   │   │   │   ├── integration
 │   │   │   │   ├── unit
 │   │   │   │   │   ├── git-add.tool.test.ts
 │   │   │   │   │   ├── git-branch.tool.test.ts
@@ -283,6 +277,8 @@ git-mcp-server
 │   │   │   │   │   ├── git-log.tool.test.ts
 │   │   │   │   │   └── git-status.tool.test.ts
 │   │   │   │   └── README.md
+│   │   │   ├── schemas
+│   │   │   │   └── common.test.ts
 │   │   │   └── utils
 │   │   │       └── markdown-builder.test.ts
 │   │   └── transports
@@ -292,6 +288,19 @@ git-mcp-server
 │   ├── mocks
 │   │   ├── handlers.ts
 │   │   └── server.ts
+│   ├── services
+│   │   └── git
+│   │       └── providers
+│   │           └── cli
+│   │               ├── operations
+│   │               │   ├── branches
+│   │               │   │   └── checkout.test.ts
+│   │               │   └── commits
+│   │               │       ├── diff.test.ts
+│   │               │       └── log.test.ts
+│   │               └── utils
+│   │                   ├── command-builder.test.ts
+│   │                   └── runtime-adapter.test.ts
 │   ├── storage
 │   │   ├── providers
 │   │   │   ├── cloudflare
